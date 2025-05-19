@@ -1,2 +1,2 @@
 # human-ai
-AI Powered Human Assistant
+AI Powered Human Resources Assistant
