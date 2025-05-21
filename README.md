@@ -23,6 +23,8 @@ mv .env-template .env
 # install deps
 pip install -r requirements.txt
 
+pip install "fastapi[standard]"
+
 # start the server
 fastapi dev main.py
 
@@ -43,6 +45,15 @@ fastapi dev main.py
 
 ```
 
+## Workflow 
+
+- Upload pdf 
+- Chunking
+- Embed
+- Persist in vector db
+
 ## Technical Approach
 
-- Use PyPDFLoader from LangChain for cleaner code. Pipeline becomes two or three lines: load → split → embed/store.
+- LangChain for simple, clean code. ex: PyPDFLoader 
+- LangServe with RESTful API 
+- LangSmith - logging, monitoring, deployment, etc. 
