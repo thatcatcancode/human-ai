@@ -1,5 +1,4 @@
 from fastapi import APIRouter, UploadFile, File
-# from schemas import AnalyzePaperResponse
 from services.pdf import process_file
 
 
