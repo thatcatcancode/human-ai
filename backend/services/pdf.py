@@ -7,14 +7,14 @@ import os
 import tempfile
 
 
-def process_file(file: UploadFile):
+async def process_file(file: UploadFile):
     if not file.filename.endswith('.pdf'):
         raise HTTPException(status_code=400, detail="File must be a PDF")
 
     # Save uploaded file to temp directory
     try:
         with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as tmp:
-            content = file.file.read()
+            content = await file.read()
             tmp.write(content)
             tmp_path = tmp.name
     except Exception as e:

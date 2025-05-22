@@ -1,17 +1,17 @@
-# from langchain.chat_models import ChatOpenAI
-# from langchain.schema import SystemMessage, HumanMessage
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
+from services.chat import chat as chat_service
 
-# # 1. Instantiate a chat model (defaults to OpenAI's gpt-3.5-turbo chat endpoint)
-# chat = ChatOpenAI(model="gpt-3.5-turbo", temperature=0.7)
 
-# # 2. Build a sequence of messages with roles
-# messages = [
-#     SystemMessage(content="You are a helpful assistant."),
-#     HumanMessage(content="Can you explain the difference between a list and a tuple in Python?")
-# ]
+router = APIRouter()
 
-# # 3. Invoke the model
-# response = chat(messages)
+class ChatMessage(BaseModel):
+    message: str
 
-# # 4. The response is an AIMessage; print its content
-# print(response.content)
+@router.post("/chat")
+async def chat_endpoint(chat_message: ChatMessage):
+    try:
+        response = await chat_service(chat_message.message)
+        return {"response": response}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

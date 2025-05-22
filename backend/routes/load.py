@@ -6,5 +6,5 @@ router = APIRouter()
 
 @router.post("/load")
 async def load(file: UploadFile = File(...)):
-    process_file(file)
+    await process_file(file)
     return {'message': 'File loaded successfully'}
