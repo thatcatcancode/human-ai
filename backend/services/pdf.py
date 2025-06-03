@@ -1,10 +1,8 @@
 from fastapi import HTTPException, UploadFile
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.embeddings import OpenAIEmbeddings
-from langchain.chains import RetrievalQA
-from pinecone import Pinecone
-#from langchain.vectorstores import Pinecone
+from langchain_openai import OpenAIEmbeddings
+from pinecone import Pinecone, ServerlessSpec
 import os
 import tempfile
 
@@ -39,14 +37,12 @@ async def process_file(file: UploadFile):
             splitter = RecursiveCharacterTextSplitter(chunk_size=800, chunk_overlap=100)
             split_docs = splitter.split_documents(docs)
             chunks = [doc.page_content for doc in split_docs]
-            assert all(isinstance(c, str) for c in chunks), "All chunks must be plain strings"
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Failed to process document chunks: {str(e)}")
 
         # embed
         try:
             embeddings = OpenAIEmbeddings(model="text-embedding-ada-002")
-            print('chunks', chunks)
             vectors = embeddings.embed_documents(chunks)
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Failed to initialize embeddings: {str(e)}")
@@ -55,25 +51,20 @@ async def process_file(file: UploadFile):
         try:
             
             # 1. Instantiate a client ──────────────────────────────────────────
-            client = Pinecone(api_key=PINECONE_API_KEY)
+            pc = Pinecone(api_key=PINECONE_API_KEY)
 
             # 2. Create or connect to an index
             # Get existing indexes
-            existing_indexes = [index.name for index in client.list_indexes()]
-            if PINECONE_INDEX_NAME not in existing_indexes:
-                client.create_index(
+            if not pc.has_index(PINECONE_INDEX_NAME):
+                pc.create_index(
                     name=PINECONE_INDEX_NAME,
-                    dimension=1536,  # your embedding dimension
+                    dimension=1536,
+                    vector_type="dense",
                     metric="cosine",
-                    spec=dict(
-                        serverless=dict(
-                            cloud="aws",
-                            region=PINECONE_ENV
-                        )
-                    )# or "euclidean", etc.
+                    spec=ServerlessSpec(cloud="aws", region=PINECONE_ENV)
                 )
 
-            index = client.Index(PINECONE_INDEX_NAME)
+            index = pc.Index(PINECONE_INDEX_NAME)
             
             # 3. Upsert your embeddings
             vectors_to_upsert = []

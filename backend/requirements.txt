@@ -5,9 +5,10 @@ requests==2.31.0
 python-dotenv==1.1.0 
 uuid
 langchain==0.3.25
+langchain-cli==0.0.36
 langchain-community==0.3.24
 langchain-openai==0.3.17
-chromadb==1.0.9
+langchain-pinecone==0.2.6
 pypdf==5.5.0
 openai==1.76.0
-pinecone==7.0.1
+

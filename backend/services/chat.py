@@ -1,16 +1,16 @@
 from fastapi import HTTPException
-from pydantic import BaseModel
-from langchain.chat_models import ChatOpenAI
-from langchain.embeddings import OpenAIEmbeddings
+from langchain_community.chat_models import ChatOpenAI
+from langchain_openai import OpenAIEmbeddings
 from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
-#from langchain.vectorstores import Pinecone
-from pinecone import Pinecone
+from pinecone.grpc import PineconeGRPC as Pinecone
+from langchain.schema import Document
 import os 
 
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
 PINECONE_ENV = os.getenv("PINECONE_ENV")
 PINECONE_INDEX_NAME = os.getenv("PINECONE_INDEX_NAME")
+PINECONE_HOST = os.getenv("PINECONE_HOST")
 
 async def chat(message: str):
     try:
@@ -18,9 +18,9 @@ async def chat(message: str):
         embeddings = OpenAIEmbeddings(model="text-embedding-ada-002")
         query_embedding = embeddings.embed_query(message)
        
-       # Initialize Pinecone
+        # Initialize Pinecone vectorstore
         pc = Pinecone(api_key=PINECONE_API_KEY)
-        index = pc.Index(PINECONE_INDEX_NAME)
+        index = pc.Index(host=PINECONE_HOST)
         
         # Query Pinecone
         results = index.query(
@@ -28,9 +28,15 @@ async def chat(message: str):
             top_k=4,
             include_metadata=True
         )
-        
-        # Extract context from results
-        context = "\n\n".join([match.metadata["text"] for match in results.matches])
+
+        # Convert results to documents and context
+        docs = [
+            Document(
+                page_content=match.metadata["text"],
+                metadata=match.metadata
+            ) for match in results.matches
+        ]
+        context = "\n\n".join([doc.page_content for doc in docs])
 
         # Create a custom prompt template
         template = """You are Leila's AI assistant, and you're a big fan of her work. You have access to her resume and professional documents.
@@ -47,13 +53,6 @@ async def chat(message: str):
             template=template,
             input_variables=["context", "question"]
         )
-        
-        # Build a Retriever + QA chain with custom prompt
-        # retriever = vectordb.as_retriever(
-        #     search_kwargs={
-        #         "k": 4  # Number of most relevant chunks to retrieve
-        #     }
-        # )
         
         qa_chain = LLMChain(
             llm=ChatOpenAI(model="gpt-3.5-turbo", temperature=0.5),

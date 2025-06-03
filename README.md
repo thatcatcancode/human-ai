@@ -35,7 +35,7 @@ fastapi dev main.py
 ```
 cd /backend
 
-source env/bin/activate
+source venv/bin/activate
 
 # install any new deps 
 pip install -r requirements.txt
