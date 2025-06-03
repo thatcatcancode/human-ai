@@ -11,7 +11,7 @@ import tempfile
 OPENAI_API_KEY   = os.getenv("OPENAI_API_KEY")
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
 PINECONE_ENV     = os.getenv("PINECONE_ENVIRONMENT")  # e.g. "us-west1-gcp"
-INDEX_NAME       = "lee-index"
+PINECONE_INDEX_NAME = os.getenv("PINECONE_INDEX_NAME") 
 
 async def process_file(file: UploadFile):
     if not file.filename.endswith('.pdf'):
@@ -60,9 +60,9 @@ async def process_file(file: UploadFile):
             # 2. Create or connect to an index
             # Get existing indexes
             existing_indexes = [index.name for index in client.list_indexes()]
-            if INDEX_NAME not in existing_indexes:
+            if PINECONE_INDEX_NAME not in existing_indexes:
                 client.create_index(
-                    name=INDEX_NAME,
+                    name=PINECONE_INDEX_NAME,
                     dimension=1536,  # your embedding dimension
                     metric="cosine",
                     spec=dict(
@@ -73,7 +73,7 @@ async def process_file(file: UploadFile):
                     )# or "euclidean", etc.
                 )
 
-            index = client.Index(INDEX_NAME)
+            index = client.Index(PINECONE_INDEX_NAME)
             
             # 3. Upsert your embeddings
             vectors_to_upsert = []

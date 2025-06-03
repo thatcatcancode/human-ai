@@ -1,5 +1,5 @@
 # human-ai
-AI Powered Human Resources Assistant
+RAG project that ingests resume and other docs about myself and answers recruiter questions about my professional expereince.
 
 ## Get Started
 
@@ -47,13 +47,19 @@ fastapi dev main.py
 
 ## Workflow 
 
-- Upload pdf 
+- Upload pdf (private endpoint)
 - Chunking
 - Embed
 - Persist in vector db
+- Ask a question via /chat endpoint
+- Query vectorstore for relevant chunks and retreive answer from LLM 
+- Integrate with my-portfolio web site
 
 ## Technical Approach
 
-- LangChain for simple, clean code. ex: PyPDFLoader 
-- LangServe with RESTful API 
+- LangChain for simple, clean code. ex: PyPDFLoader
+- Pinecone for vectorstore
+- Llama model for human responses
+- Hugging Face hosting for IP protection
+- Python's FastAPI for RESTful endpoints 
 - LangSmith - logging, monitoring, deployment, etc. 
