@@ -1,9 +1,8 @@
 from fastapi import HTTPException
-from langchain_community.chat_models import ChatOpenAI
-from langchain_openai import OpenAIEmbeddings
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
-from pinecone.grpc import PineconeGRPC as Pinecone
+from pinecone import Pinecone
 from langchain.schema import Document
 import os 
 
@@ -20,7 +19,7 @@ async def chat(message: str):
        
         # Initialize Pinecone vectorstore
         pc = Pinecone(api_key=PINECONE_API_KEY)
-        index = pc.Index(host=PINECONE_HOST)
+        index = pc.Index(PINECONE_INDEX_NAME)
         
         # Query Pinecone
         results = index.query(
