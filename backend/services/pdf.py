@@ -8,8 +8,8 @@ import tempfile
 
 OPENAI_API_KEY   = os.getenv("OPENAI_API_KEY")
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
-PINECONE_ENV     = os.getenv("PINECONE_ENVIRONMENT")  # e.g. "us-west1-gcp"
-PINECONE_INDEX_NAME = os.getenv("PINECONE_INDEX_NAME") 
+PINECONE_ENV     = os.getenv("PINECONE_ENVIRONMENT")  # e.g. "us-west1-gcp" 
+PINECONE_INDEX_NAME_2 = os.getenv("PINECONE_INDEX_NAME_2")
 
 async def process_file(file: UploadFile):
     if not file.filename.endswith('.pdf'):
@@ -55,16 +55,16 @@ async def process_file(file: UploadFile):
 
             # 2. Create or connect to an index
             # Get existing indexes
-            if not pc.has_index(PINECONE_INDEX_NAME):
+            if not pc.has_index(PINECONE_INDEX_NAME_2):
                 pc.create_index(
-                    name=PINECONE_INDEX_NAME,
+                    name=PINECONE_INDEX_NAME_2,
                     dimension=1536,
                     vector_type="dense",
                     metric="cosine",
                     spec=ServerlessSpec(cloud="aws", region=PINECONE_ENV)
                 )
 
-            index = pc.Index(PINECONE_INDEX_NAME)
+            index = pc.Index(PINECONE_INDEX_NAME_2)
             
             # 3. Upsert your embeddings
             vectors_to_upsert = []

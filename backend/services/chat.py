@@ -8,7 +8,7 @@ import os
 
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
 PINECONE_ENV = os.getenv("PINECONE_ENV")
-PINECONE_INDEX_NAME = os.getenv("PINECONE_INDEX_NAME")
+PINECONE_INDEX_NAME_2 = os.getenv("PINECONE_INDEX_NAME_2")
 PINECONE_HOST = os.getenv("PINECONE_HOST")
 
 async def chat(message: str):
@@ -19,7 +19,7 @@ async def chat(message: str):
        
         # Initialize Pinecone vectorstore
         pc = Pinecone(api_key=PINECONE_API_KEY)
-        index = pc.Index(PINECONE_INDEX_NAME)
+        index = pc.Index(PINECONE_INDEX_NAME_2)
         
         # Query Pinecone
         results = index.query(
