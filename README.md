@@ -47,12 +47,12 @@ fastapi dev main.py
 
 ## Workflow 
 
-- Upload pdf (private endpoint)
+- Upload pdf (requires auth)
 - Chunking
-- Embed
+- Embeddings
 - Persist in vector db
 - Ask a question via /chat endpoint
-- Query vectorstore for relevant chunks and retreive answer from LLM 
+- Query vectorstore for relevant chunks and format answer by LLM 
 - Integrate with my-portfolio web site
 
 ## Technical Approach
@@ -62,4 +62,4 @@ fastapi dev main.py
 - Llama model for human responses
 - Hugging Face hosting for IP protection
 - Python's FastAPI for RESTful endpoints 
-- LangSmith - logging, monitoring, deployment, etc. 
+- LangSmith - logging & monitoring
