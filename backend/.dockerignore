@@ -1,0 +1,34 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Bytecode and temp files
+*.log
+*.tmp
+*.swp
+
+# Virtual environments
+env/
+venv/
+.venv/
+
+# OS or editor files
+.DS_Store
+.vscode/
+.idea/
+
+# Git
+.git
+.gitignore
+
+# Docker itself
+Dockerfile
+.dockerignore
+
+# Unit test outputs and coverage
+htmlcov/
+coverage.xml
+.pytest_cache/
+.cache/
