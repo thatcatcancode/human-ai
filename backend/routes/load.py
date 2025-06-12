@@ -8,11 +8,6 @@ router = APIRouter()
 API_KEY_NAME = "X-API-Key"
 api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=True)
 
-# Add OpenAPI security scheme
-router.swagger_ui_init_oauth = {
-    "usePkceWithAuthorizationCodeGrant": True
-}
-
 async def get_api_key(api_key_header: str = Security(api_key_header)):
     if api_key_header != os.getenv("LOAD_API_KEY"):
         raise HTTPException(
