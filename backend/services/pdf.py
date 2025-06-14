@@ -34,7 +34,7 @@ async def process_file(file: UploadFile):
 
         # simple chunking
         try:
-            splitter = RecursiveCharacterTextSplitter(chunk_size=800, chunk_overlap=100)
+            splitter = RecursiveCharacterTextSplitter(chunk_size=800, chunk_overlap=300)
             split_docs = splitter.split_documents(docs)
             chunks = [doc.page_content for doc in split_docs]
         except Exception as e:
