@@ -28,5 +28,5 @@ jobs:
           push: true
           tags: leeadams/human-ai:latest
 
-      # - name: Trigger Render Deploy
-      #   run: curl -X POST ${{ secrets.RENDER_BACKEND_DEPLOY_HOOK }}
+      - name: Trigger Render Deploy
+        run: curl -X POST ${{ secrets.RENDER_BACKEND_DEPLOY_HOOK }}
