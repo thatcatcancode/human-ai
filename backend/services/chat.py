@@ -64,9 +64,8 @@ async def chat(message: str):
             "question": message
         })
         return {
-            "answer": response['text'],
-            "type": "robot",
-            "source": "AI"
+            "content": response['text'],
+            "role": "agent",
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Chat error: {str(e)}")
