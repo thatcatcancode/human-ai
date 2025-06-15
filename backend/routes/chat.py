@@ -12,6 +12,6 @@ class ChatMessage(BaseModel):
 async def chat_endpoint(chat_message: ChatMessage):
     try:
         response = await chat_service(chat_message.message)
-        return {"response": response}
+        return { "data": response }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
