@@ -23,14 +23,14 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://thatcatcancode.github.io/my-portfolio/"], 
+    allow_origins=["http://localhost:3000", "https://thatcatcancode.github.io",], 
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 @app.get("/")
-async def root():
+async def root()
     return {"message": "Hello World"}
 
 app.include_router(load.router)
