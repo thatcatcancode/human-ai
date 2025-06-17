@@ -5,7 +5,7 @@ RAG project that ingests resume and other docs about myself and answers recruite
 
 ### First time set up
 ```
-cd /backend
+cd backend
 
 # create virtual env
 py -m venv venv
@@ -33,7 +33,7 @@ fastapi dev main.py
 ### Run the project 
 
 ```
-cd /backend
+cd backend
 
 source venv/bin/activate
 

@@ -7,11 +7,10 @@ uuid
 langchain==0.3.25
 langchain-cli==0.0.36
 langchain-community==0.3.24
+langchain-huggingface==0.3.0
 langchain-openai==0.3.17
 langchain-pinecone==0.2.6
 pypdf==5.5.0
 openai==1.76.0
-transformers==4.36.0
-torch==2.1.0
-sentence-transformers==2.2.2
+
 
