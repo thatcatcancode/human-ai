@@ -20,12 +20,8 @@ echo $VIRTUAL_ENV
 copy .env file and set your own values
 mv .env-template .env
 
-# install pytorch
-
 # install deps
-
 pip install -r requirements.txt
-pip install torch
 
 pip install "fastapi[standard]"
 
