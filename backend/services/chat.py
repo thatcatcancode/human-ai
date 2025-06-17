@@ -1,25 +1,26 @@
 from fastapi import HTTPException
-from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
+from langchain_community.llms import Ollama
 from pinecone import Pinecone
 from langchain.schema import Document
 import os 
 
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
 PINECONE_ENV = os.getenv("PINECONE_ENV")
-PINECONE_INDEX_NAME_2 = os.getenv("PINECONE_INDEX_NAME_2")
+PINECONE_INDEX_NAME_3 = os.getenv("PINECONE_INDEX_NAME_3")
 PINECONE_HOST = os.getenv("PINECONE_HOST")
 
 async def chat(message: str):
     try:
-        # Load your embeddings & Chroma store (persisted to disk)
-        embeddings = OpenAIEmbeddings(model="text-embedding-ada-002")
+        # Load embeddings 
+        embeddings = HuggingFaceEmbeddings(model="sentence-transformers/all-mpnet-base-v2")
         query_embedding = embeddings.embed_query(message)
        
         # Initialize Pinecone vectorstore
         pc = Pinecone(api_key=PINECONE_API_KEY)
-        index = pc.Index(PINECONE_INDEX_NAME_2)
+        index = pc.Index(PINECONE_INDEX_NAME_3)
         
         # Query Pinecone
         results = index.query(
@@ -39,7 +40,7 @@ async def chat(message: str):
 
         # Create a custom prompt template
         template = """You are Leila's AI assistant, and you're a big fan of her work. You have access to her resume and professional documents.
-        Keep your responses concise, upbeat, enthusiastic, and focused on the question asked.
+        Keep your responses concise, upbeat, enthusiastic, and focused on the question asked. Never mention salary or compensation.
         
         Here are the relevant sections from Leila's documents that might help answer the question:
         {context}
@@ -54,7 +55,7 @@ async def chat(message: str):
         )
         
         qa_chain = LLMChain(
-            llm=ChatOpenAI(model="gpt-3.5-turbo", temperature=0.5),
+            llm=Ollama(model="llama3", temperature=0.5),
             prompt=prompt
         )
         
