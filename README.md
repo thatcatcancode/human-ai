@@ -8,7 +8,7 @@ RAG project that ingests resume and other docs about myself and answers recruite
 cd backend
 
 # create virtual env
-py -m venv venv
+/Users/ladams/.pyenv/versions/3.12.10/bin/python3.12 -m venv venv
 
 # activate venv
 source venv/bin/activate
@@ -20,8 +20,12 @@ echo $VIRTUAL_ENV
 copy .env file and set your own values
 mv .env-template .env
 
+# install pytorch
+
 # install deps
+
 pip install -r requirements.txt
+pip install torch
 
 pip install "fastapi[standard]"
 

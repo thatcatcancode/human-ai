@@ -1,7 +1,7 @@
 from fastapi import HTTPException, UploadFile
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_openai import OpenAIEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from pinecone import Pinecone, ServerlessSpec
 import os
 import tempfile
@@ -9,7 +9,7 @@ import tempfile
 OPENAI_API_KEY   = os.getenv("OPENAI_API_KEY")
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
 PINECONE_ENV     = os.getenv("PINECONE_ENVIRONMENT")  # e.g. "us-west1-gcp" 
-PINECONE_INDEX_NAME_2 = os.getenv("PINECONE_INDEX_NAME_2")
+PINECONE_INDEX_NAME_3 = os.getenv("PINECONE_INDEX_NAME_3")
 
 async def process_file(file: UploadFile):
     if not file.filename.endswith('.pdf'):
@@ -34,7 +34,7 @@ async def process_file(file: UploadFile):
 
         # simple chunking
         try:
-            splitter = RecursiveCharacterTextSplitter(chunk_size=800, chunk_overlap=300)
+            splitter = RecursiveCharacterTextSplitter(separators=["\n"], chunk_size=2000, chunk_overlap=300)
             split_docs = splitter.split_documents(docs)
             chunks = [doc.page_content for doc in split_docs]
         except Exception as e:
@@ -42,7 +42,7 @@ async def process_file(file: UploadFile):
 
         # embed
         try:
-            embeddings = OpenAIEmbeddings(model="text-embedding-ada-002")
+            embeddings = HuggingFaceEmbeddings(model="sentence-transformers/all-mpnet-base-v2")
             vectors = embeddings.embed_documents(chunks)
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Failed to initialize embeddings: {str(e)}")
@@ -55,16 +55,16 @@ async def process_file(file: UploadFile):
 
             # 2. Create or connect to an index
             # Get existing indexes
-            if not pc.has_index(PINECONE_INDEX_NAME_2):
+            if not pc.has_index(PINECONE_INDEX_NAME_3):
                 pc.create_index(
-                    name=PINECONE_INDEX_NAME_2,
-                    dimension=1536,
+                    name=PINECONE_INDEX_NAME_3,
+                    dimension=768,
                     vector_type="dense",
                     metric="cosine",
                     spec=ServerlessSpec(cloud="aws", region=PINECONE_ENV)
                 )
 
-            index = pc.Index(PINECONE_INDEX_NAME_2)
+            index = pc.Index(PINECONE_INDEX_NAME_3)
             
             # 3. Upsert your embeddings
             vectors_to_upsert = []
