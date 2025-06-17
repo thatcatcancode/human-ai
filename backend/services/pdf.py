@@ -9,7 +9,7 @@ import tempfile
 OPENAI_API_KEY   = os.getenv("OPENAI_API_KEY")
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
 PINECONE_ENV     = os.getenv("PINECONE_ENVIRONMENT")  # e.g. "us-west1-gcp" 
-PINECONE_INDEX_NAME_3 = os.getenv("PINECONE_INDEX_NAME_3")
+PINECONE_INDEX_NAME = os.getenv("PINECONE_INDEX_NAME")
 
 async def process_file(file: UploadFile):
     if not file.filename.endswith('.pdf'):
@@ -34,7 +34,7 @@ async def process_file(file: UploadFile):
 
         # simple chunking
         try:
-            splitter = RecursiveCharacterTextSplitter(separators=["\n"], chunk_size=2000, chunk_overlap=300)
+            splitter = RecursiveCharacterTextSplitter(separators=["\n•", "\n*", "\n-", "\n\n", "\n", ".", " ", ""], chunk_size=400, chunk_overlap=45)
             split_docs = splitter.split_documents(docs)
             chunks = [doc.page_content for doc in split_docs]
         except Exception as e:
@@ -55,16 +55,16 @@ async def process_file(file: UploadFile):
 
             # 2. Create or connect to an index
             # Get existing indexes
-            if not pc.has_index(PINECONE_INDEX_NAME_3):
+            if not pc.has_index(PINECONE_INDEX_NAME):
                 pc.create_index(
-                    name=PINECONE_INDEX_NAME_3,
+                    name=PINECONE_INDEX_NAME,
                     dimension=768,
                     vector_type="dense",
                     metric="cosine",
                     spec=ServerlessSpec(cloud="aws", region=PINECONE_ENV)
                 )
 
-            index = pc.Index(PINECONE_INDEX_NAME_3)
+            index = pc.Index(PINECONE_INDEX_NAME)
             
             # 3. Upsert your embeddings
             vectors_to_upsert = []
