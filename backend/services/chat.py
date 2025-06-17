@@ -2,7 +2,8 @@ from fastapi import HTTPException
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
-from langchain_community.llms import Ollama
+#from langchain_community.llms import Ollama
+from langchain_groq import ChatGroq
 from pinecone import Pinecone
 from langchain.schema import Document
 import os 
@@ -11,6 +12,7 @@ PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
 PINECONE_ENV = os.getenv("PINECONE_ENV")
 PINECONE_INDEX_NAME = os.getenv("PINECONE_INDEX_NAME")
 PINECONE_HOST = os.getenv("PINECONE_HOST")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 async def chat(message: str):
     try:
@@ -55,7 +57,8 @@ async def chat(message: str):
         )
         
         qa_chain = LLMChain(
-            llm=Ollama(model="llama3", temperature=0.5),
+            #llm=Ollama(model="llama3", temperature=0.5),
+            llm=ChatGroq(model="llama-3.1-8b-instant", temperature=0.5),
             prompt=prompt
         )
         
