@@ -6,6 +6,7 @@ from langchain.prompts import PromptTemplate
 from langchain_groq import ChatGroq
 from pinecone import Pinecone
 from langchain.schema import Document
+from langsmith import traceable
 import os 
 
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
@@ -14,6 +15,7 @@ PINECONE_INDEX_NAME = os.getenv("PINECONE_INDEX_NAME")
 PINECONE_HOST = os.getenv("PINECONE_HOST")
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
+@traceable()
 async def chat(message: str):
     try:
         # Load embeddings 

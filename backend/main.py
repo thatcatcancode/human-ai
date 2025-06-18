@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.security.api_key import APIKeyHeader
+from langsmith.middleware import TracingMiddleware
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -28,6 +29,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.add_middleware(TracingMiddleware)
 
 @app.get("/")
 async def root():
