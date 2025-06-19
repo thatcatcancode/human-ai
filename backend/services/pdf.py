@@ -59,7 +59,7 @@ async def process_file(file: UploadFile):
                     dimension=768,
                     vector_type="dense",
                     metric="cosine",
-                    spec=ServerlessSpec(cloud="aws", region=PINECONE_ENV)
+                    spec=ServerlessSpec(cloud="aws", region='us-east-1')
                 )
 
             index = pc.Index(PINECONE_INDEX_NAME)
