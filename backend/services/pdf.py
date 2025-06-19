@@ -6,9 +6,7 @@ from pinecone import Pinecone, ServerlessSpec
 import os
 import tempfile
 
-OPENAI_API_KEY   = os.getenv("OPENAI_API_KEY")
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
-PINECONE_ENV     = os.getenv("PINECONE_ENVIRONMENT")  # e.g. "us-west1-gcp" 
 PINECONE_INDEX_NAME = os.getenv("PINECONE_INDEX_NAME")
 
 async def process_file(file: UploadFile):
