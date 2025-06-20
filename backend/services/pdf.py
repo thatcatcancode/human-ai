@@ -5,6 +5,9 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from pinecone import Pinecone, ServerlessSpec
 import os
 import tempfile
+import uuid
+import hashlib
+from datetime import datetime
 
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
 PINECONE_INDEX_NAME = os.getenv("PINECONE_INDEX_NAME")
@@ -66,16 +69,23 @@ async def process_file(file: UploadFile):
             
             # 3. Upsert your embeddings
             vectors_to_upsert = []
+            file_hash = hashlib.md5(file.filename.encode()).hexdigest()[:8]
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
             for i, (vector, chunk) in enumerate(zip(vectors, chunks)):
-                vectors_to_upsert.append(
-                    {
-                        "id": f"doc_{i}",
-                        "values": vector,
-                        "metadata": {
-                            "text": chunk
-                        }
-                    }   
-                )
+                # Create unique ID with file info and timestamp
+                unique_id = f"{file_hash}_{timestamp}_chunk_{i}"
+                
+                vectors_to_upsert.append({
+                    "id": unique_id,
+                    "values": vector,
+                    "metadata": {
+                        "text": chunk,
+                        "filename": file.filename,
+                        "upload_time": timestamp,
+                        "chunk_index": i
+                    }
+                })
             batch_size = 100
             for i in range(0, len(vectors_to_upsert), batch_size):
                 batch = vectors_to_upsert[i:i+batch_size]   
