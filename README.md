@@ -59,7 +59,9 @@ fastapi dev main.py
 
 - LangChain for simple, clean code. ex: PyPDFLoader
 - Pinecone for vectorstore
-- Llama model for human responses
-- Hugging Face hosting for IP protection
-- Python's FastAPI for RESTful endpoints 
+- Meta's free llama3 model for human formatted responses
+- Hugging Face transformer for embeddings (768 dimensions)
+- Groq Cloud for hosting LLM
+- Python's FastAPI for RESTful endpoints (/load and /chat)
 - LangSmith - logging & monitoring
+- Render for web service hosting (too expensive)
